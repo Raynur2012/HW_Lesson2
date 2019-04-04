@@ -12,7 +12,7 @@ public class Mass {
                     int a = Integer.parseInt(arr[i][j]);
                     sum += a;
                 } catch (NumberFormatException ex){
-                    throw new MyArrayDataException("Incorrect format of Value on index " + i + " " + j);
+                    throw new MyArrayDataException("Incorrect format of Value on index " + i + " " + j, ex);
                 }
             }
 //        for(String[] s1: arr)
