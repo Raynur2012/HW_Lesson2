@@ -2,7 +2,7 @@ package ru.geekbrains.lesson1;
 
 public class Mass {
     public void arraySumm(String[][] arr) throws MySizeArrayException, MyArrayDataException {
-        int summ = 0;
+        int sum = 0;
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[i].length; j++) {
                 if (arr[i].length!=4 && arr[j].length!=4) {
@@ -10,17 +10,17 @@ public class Mass {
                 }
                 try {
                     int a = Integer.parseInt(arr[i][j]);
-                    summ += a;
+                    sum += a;
                 } catch (NumberFormatException ex){
-                    throw new MyArrayDataException("Incorrect format of Value on index " + i + " " + j);
+                    throw new MyArrayDataException("Incorrect format of Value on index " + i + " " + j, ex);
                 }
             }
 //        for(String[] s1: arr)
 //            for (String s2 : s1) {
 //                int a = Integer.parseInt(s2);
-//                summ += a;
+//                sum += a;
 //            }
         }
-        System.out.println(summ);
+        System.out.println(sum);
     }
 }

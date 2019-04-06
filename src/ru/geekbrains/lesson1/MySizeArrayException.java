@@ -1,7 +1,7 @@
 package ru.geekbrains.lesson1;
 
 public class MySizeArrayException extends Exception {
-    public MySizeArrayException() {
+    public MySizeArrayException ()  {
     }
 
     public MySizeArrayException(String message) {
