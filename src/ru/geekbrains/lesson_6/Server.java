@@ -14,29 +14,9 @@ public class Server {
                 System.out.println("Сервер запущен, ожидает подключения");
                 Socket socket = serverSocket.accept();
                 System.out.println("Новое подключение > " + socket.getInetAddress());
+                ClientHendler clientHendler = new ClientHendler(socket);
+                clientHendler.start();
 
-                DataInputStream in = new DataInputStream(socket.getInputStream());
-                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-
-                while(true){
-
-                    try {
-                        System.out.println("Введите сообщение от сервера");
-                        System.out.println("Новое сообщение >  " + in.readUTF());
-                        Scanner scanner = new Scanner(System.in);
-                        System.out.println("Введите сообщение от сервера");
-                        String line = scanner.nextLine();
-
-                        try {
-                            out.writeUTF(line);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (IOException ex){
-                        ex.printStackTrace();
-                        break;
-                    }
-                }
             }
         } catch (IOException ex){
             ex.printStackTrace();
