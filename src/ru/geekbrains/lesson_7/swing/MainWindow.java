@@ -55,12 +55,8 @@ public class MainWindow extends JFrame implements MessageReciever {
                     TextMessage msg = new TextMessage(network.getLogin(), "ivan", text);
                     messageListModel.add(messageListModel.size(), msg);
                     messageField.setText(null);
-
-
-                    if(text != null){
-                        network.sendTextMessage(msg);
+                    network.sendTextMessage(msg);
                     }
-                }
             }
         });
         sendMessagePanel.add(sendButton, BorderLayout.EAST);
@@ -72,7 +68,9 @@ public class MainWindow extends JFrame implements MessageReciever {
 
         this.network = new Network("localhost", 7777, this);
 
-        LoginDialog loginDialog = new LoginDialog(this, network);
+        LoginDialog loginDialog = new LoginDialog(this, network);//this говорит, что этот фрэйм является родительским
+        //для окна ввода логина и пароля. Cоздаем тут объект, что бы появлялось окно авторизации. Передаем нетворк
+        //в параметре, что бы логинДиалог принял хост и порт?
         loginDialog.setVisible(true);
 
         if (!loginDialog.isConnected()) {
@@ -89,6 +87,16 @@ public class MainWindow extends JFrame implements MessageReciever {
                 messageList.ensureIndexIsVisible(messageListModel.size() - 1);
             }
         });
+    }
+
+    @Override
+    public void userConnected(String login) {
+
+    }
+
+    @Override
+    public void userDisconnected(String login) {
+
     }
 }
 

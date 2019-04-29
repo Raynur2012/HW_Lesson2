@@ -5,8 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import static ru.geekbrains.lesson_7.MessagePatterns.AUTH_PATTERN;
-import static ru.geekbrains.lesson_7.MessagePatterns.MESSAGE_SEND_PATTERN;
+import static ru.geekbrains.lesson_7.MessagePatterns.*;
 
 public class Network {
     public Socket socket;
@@ -26,17 +25,26 @@ public class Network {
         this.port = port;
         this.messageReciever = messageReciever;
 
-        this.receiverThread = new Thread(new Runnable() {
+        this.receiverThread = new Thread(new Runnable() {//поток приема сообщений
             @Override
             public void run() {
-                while (true) {
+                while (!Thread.currentThread().isInterrupted()) {
                     try {
                         String text = in.readUTF();
 
-                        // TODO проверить, пришло ли в строке text сообщение
-                        // TODO определить текст и отправителя
-                        TextMessage textMessage = new TextMessage("", login, "");
-                        messageReciever.submitMessage(textMessage);
+                        System.out.println("New message " + text);
+                        TextMessage msg = parseTextMessageRegx(text, login);
+                        if (msg != null) {
+                            messageReciever.submitMessage(msg);
+                            continue;
+                        }
+
+                        System.out.println("Connection message " + text);
+                        String login = parseConnectedMessage(text);
+                        if (login != null) {
+                            messageReciever.userConnected(login);
+                            continue;
+                        }
 
                     } catch (IOException e) {
                         e.printStackTrace();

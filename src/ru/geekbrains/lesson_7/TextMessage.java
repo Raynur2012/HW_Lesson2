@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 public class TextMessage {
     private LocalDateTime created;
 
-    private String userFrom;
+    private String userFrom;//имя пользователя, который отправил сообщение
 
-    private String userTo;
+    private String userTo;//имя пользователя, кому мы отправляем сообщение
 
     private String text;
 

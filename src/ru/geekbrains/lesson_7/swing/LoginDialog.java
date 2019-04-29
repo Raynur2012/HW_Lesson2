@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class LoginDialog extends JDialog {
+
     private Network network;
     private JTextField tfUsername;
     private JPasswordField pfPassword;
@@ -31,9 +32,9 @@ public class LoginDialog extends JDialog {
         cs.fill = GridBagConstraints.HORIZONTAL;
 
         lbUsername = new JLabel("Имя пользователя: ");
-        cs.gridx = 0;
+        cs.gridx = 0;//с какйо клетки начнем
         cs.gridy = 0;
-        cs.gridwidth = 1;
+        cs.gridwidth = 1;//размер, то есть сколько клеток займем
         panel.add(lbUsername, cs);
 
         tfUsername = new JTextField(20);
