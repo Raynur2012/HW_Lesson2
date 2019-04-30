@@ -7,10 +7,13 @@ public final class MessagePatterns {
     public static final String AUTH_PATTERN = "/auth %s %s";
     public static final String AUTH_SUCCESS_RESPONSE = "/auth successful";
     public static final String AUTH_FAIL_RESPONSE = "/auth fail";
+    public static final String AUTH_FAIL_ALREDYCONNECTED = "/auth alredy connected";
 
     public static final String DISCONNECT = "/disconnect";
     public static final String CONNECTED = "/connected";
+    public static final String DISCONNECTED = "/disconnected";
     public static final String CONNECTED_SEND = CONNECTED + " %s";
+    public static final String DISCONNECTED_SEND = DISCONNECTED + " %s";
 
     public static final String MESSAGE_PREFIX = "/w";
     public static final String MESSAGE_SEND_PATTERN = MESSAGE_PREFIX + " %s %s";
@@ -41,6 +44,15 @@ public final class MessagePatterns {
     public static String parseConnectedMessage(String text) {
         String[] parts = text.split(" ");
         if (parts.length == 2 && parts[0].equals(CONNECTED)) {
+            return parts[1];
+        } else {
+            System.out.println("Unknown message pattern: " + text);
+            return null;
+        }
+    }
+    public static String parseDisconnectedMessage(String text) {
+        String[] parts = text.split(" ");
+        if (parts.length == 2 && parts[0].equals(DISCONNECTED)) {
             return parts[1];
         } else {
             System.out.println("Unknown message pattern: " + text);

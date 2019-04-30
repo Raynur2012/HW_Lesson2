@@ -35,6 +35,10 @@ public class ClientHandler {
                         TextMessage msg = parseTextMessageRegx(text, login);
                         if (msg != null) {
                             chatServer.sendMessage (msg);
+                        } else if (text.equals(DISCONNECT)) {
+                            System.out.printf("user %s is disconnected%n", login);
+                            chatServer.unsubscribe(login);
+                            return;
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -52,6 +56,19 @@ public class ClientHandler {
     }
 
     public void sendMessage(String userFrom, String msg) throws IOException {
-        out.writeUTF(String.format(MESSAGE_SEND_PATTERN, userFrom, msg));
+        if(socket.isConnected()) {
+            out.writeUTF(String.format(MESSAGE_SEND_PATTERN, userFrom, msg));
+        }
+    }
+    public void sendConnectionMessage(String login) throws IOException{
+        if(socket.isConnected()) {
+            out.writeUTF(String.format(CONNECTED_SEND, login));
+        }
+    }
+
+    public void sendDisconnectionMessage(String login) throws IOException {
+        if(socket.isClosed()){
+            out.writeUTF(String.format(DISCONNECTED_SEND, login));
+        }
     }
 }

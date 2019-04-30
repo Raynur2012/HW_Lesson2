@@ -1,13 +1,16 @@
 package ru.geekbrains.lesson_7;
 
+import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collections;
+import java.util.List;
 
 import static ru.geekbrains.lesson_7.MessagePatterns.*;
 
-public class Network {
+public class Network implements Closeable {
     public Socket socket;
     public DataInputStream in;
     public DataOutputStream out;
@@ -43,6 +46,13 @@ public class Network {
                         String login = parseConnectedMessage(text);
                         if (login != null) {
                             messageReciever.userConnected(login);
+                            continue;
+                        }
+
+                        System.out.println("Disconnection message " + text);
+                        String disconnectedLogin = parseDisconnectedMessage(text);
+                        if (disconnectedLogin != null) {
+                            messageReciever.userDisconnected(disconnectedLogin);
                             continue;
                         }
 
@@ -85,7 +95,19 @@ public class Network {
         }
     }
 
+    public List<String> requestConnectedUserList(){
+
+        return Collections.emptyList();//реализовать запрос с сервера списка всех подключенных пользователей
+    }
+
     public String getLogin() {
         return login;
+    }
+
+    @Override
+    public void close() throws IOException {
+        this.receiverThread.interrupt();//останавливаем поток
+        sendMessage(DISCONNECT);//передаем сообщение о разрыве соединения
+
     }
 }

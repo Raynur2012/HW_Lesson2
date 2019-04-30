@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static ru.geekbrains.lesson_7.MessagePatterns.*;
+
 
 public class ChatServer {
     private AuthService authService = new AuthServiceImpl();
@@ -44,14 +46,14 @@ public class ChatServer {
                 }
                 if (user != null && authService.authUser(user)) {
                     System.out.printf("User %s authorized successful!%n", user.getLogin());
-                    clientHandlerMap.put(user.getLogin(), new ClientHandler(user.getLogin(), socket, this));
-                    out.writeUTF("/auth successful");
+                    subscribe(user.getLogin(), socket, user);
+                    out.writeUTF(AUTH_SUCCESS_RESPONSE);
                     out.flush();
                 } else {
                     if (user != null) {
                         System.out.printf("Wrong authorization for user %s%n", user.getLogin());
                     }
-                    out.writeUTF("/auth fails");
+                    out.writeUTF(AUTH_FAIL_RESPONSE);
                     out.flush();
                     socket.close();
                 }
@@ -70,13 +72,44 @@ public class ChatServer {
         return new User(authParts[1], authParts[2]);
     }
 
+    private void sendUserConnectedMessage(String login) throws IOException {
+        for(ClientHandler clientHendler : clientHandlerMap.values()){
+            if(!clientHendler.getLogin().equals(login)) {
+                System.out.printf("Sending connection notification to %s about %s%n", clientHendler.getLogin(), login);
+                clientHendler.sendConnectionMessage(login);
+            }
+        }
+    }
+
+    private void sendUserDisconnectedMessage(String login) throws IOException {
+        for(ClientHandler clientHendler : clientHandlerMap.values()){
+            clientHendler.sendDisconnectionMessage(login);
+        }
+    }
+
     public void sendMessage(TextMessage msg) throws IOException {
-        ClientHandler userToClientHandler = clientHandlerMap.get(msg.getUserTo());
+        ClientHandler userToClientHandler = clientHandlerMap.get(msg.getUserFrom());
         if( userToClientHandler != null) {
-            userToClientHandler.sendMessage(msg.getUserFrom(), msg.getText());
+            userToClientHandler.sendMessage(msg.getUserTo(), msg.getText());
         } else {
             System.out.printf("User %s not founded%n", msg.getUserTo());
         }
-
     }
+
+    public void subscribe(String login, Socket socket, User user) throws IOException {
+        if (user != null && authService.authUser(user)) {
+            System.out.println(AUTH_FAIL_ALREDYCONNECTED);
+        }
+            else{
+                clientHandlerMap.put(login, new ClientHandler(login, socket, this));
+        }
+            sendUserConnectedMessage(login);
+    }
+
+    public void unsubscribe(String login) throws IOException {
+        clientHandlerMap.remove(login);
+        sendUserDisconnectedMessage(login);
+    }
+
+
 }
