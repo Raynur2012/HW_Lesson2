@@ -15,8 +15,8 @@ public class Mass {
                     throw new MyArrayDataException("Incorrect format of Value on index " + i + " " + j, ex);
                 }
             }
-//        for(String[] s1: arr)
-//            for (String s2 : s1) {
+//        for(swing[] s1: arr)
+//            for (swing s2 : s1) {
 //                int a = Integer.parseInt(s2);
 //                sum += a;
 //            }
